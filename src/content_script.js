@@ -53,10 +53,9 @@ if (localStorage['enhanced-h264ify-disable_LN'] === undefined) {
   localStorage['enhanced-h264ify-disable_LN'] = false;
 }
 
-// Cache chrome.storage.local options in localStorage.
-// This is needed because chrome.storage.local.get() is async and we want to
-// load the injection script immediately.
-// See https://bugs.chromium.org/p/chromium/issues/detail?id=54257
+// Cache chrome.storage.local options in localStorage, then inject the codec
+// check script. Injection is deferred until the callback so that the injected
+// script always reads storage-verified values instead of stale defaults.
 chrome.storage.local.get({
   // Set defaults
   block_60fps: false,
@@ -76,17 +75,15 @@ chrome.storage.local.get({
    localStorage['enhanced-h264ify-block_opus'] = options.block_opus;
    localStorage['enhanced-h264ify-block_mp4a'] = options.block_mp4a;
    localStorage['enhanced-h264ify-disable_LN'] = options.disable_LN;
+
+   const injectScript = document.createElement('script');
+   injectScript.src = chrome.runtime.getURL("/src/inject/inject_codec_check.js");
+   injectScript.onload = function() {
+     this.parentNode.removeChild(this);
+   };
+   (document.head || document.documentElement).appendChild(injectScript);
  }
 );
-
-const injectScript = document.createElement('script');
-// Use textContent instead of src to run inject() synchronously
-injectScript.src = chrome.runtime.getURL("/src/inject/inject_codec_check.js");
-injectScript.onload = function() {
-  // Remove <script> node after injectScript runs.
-  this.parentNode.removeChild(this);
-};
-(document.head || document.documentElement).appendChild(injectScript);
 
 
 document.onreadystatechange = function() {
