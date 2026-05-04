@@ -24,8 +24,10 @@
  */
 
 function useActualVolumeLevel() {
+  var scriptTag = document.currentScript;
+  var disableLn = scriptTag && scriptTag.dataset.disableLn;
 
-  if (localStorage['enhanced-h264ify-disable_LN'] !== 'true') {
+  if (disableLn !== 'true') {
     return;
   }
 

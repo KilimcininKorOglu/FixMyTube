@@ -93,6 +93,7 @@ document.onreadystatechange = function() {
   if (document.readyState == 'complete') {
     const script = document.createElement('script');
     script.src = chrome.runtime.getURL("/src/inject/inject_ln.js");
+    script.dataset.disableLn = localStorage['enhanced-h264ify-disable_LN'];
     document.body.appendChild(script);
   }
 }
