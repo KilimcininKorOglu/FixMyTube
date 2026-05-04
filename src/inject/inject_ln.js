@@ -39,7 +39,9 @@ function useActualVolumeLevel() {
         // Get current volume level from player's attribute
         // and set the actual volume
         const video = document.querySelector('video');
-        video.volume = mutation.target.attributes[attr].value / 100;
+        if (video) {
+          video.volume = mutation.target.attributes[attr].value / 100;
+        }
       }
     }
   }
