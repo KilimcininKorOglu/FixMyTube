@@ -27,37 +27,13 @@
 // javascript variables on the youtube page. Thus, we have to inject another
 // script into the DOM.
 
-// Set defaults for options stored in localStorage
-if (localStorage['enhanced-h264ify-block_60fps'] === undefined) {
-  localStorage['enhanced-h264ify-block_60fps'] = false;
-}
-if (localStorage['enhanced-h264ify-block_h264'] === undefined) {
-  localStorage['enhanced-h264ify-block_h264'] = false;
-}
-if (localStorage['enhanced-h264ify-block_vp8'] === undefined) {
-  localStorage['enhanced-h264ify-block_vp8'] = true;
-}
-if (localStorage['enhanced-h264ify-block_vp9'] === undefined) {
-  localStorage['enhanced-h264ify-block_vp9'] = true;
-}
-if (localStorage['enhanced-h264ify-block_av1'] === undefined) {
-  localStorage['enhanced-h264ify-block_av1'] = true;
-}
-if (localStorage['enhanced-h264ify-block_opus'] === undefined) {
-  localStorage['enhanced-h264ify-block_opus'] = false;
-}
-if (localStorage['enhanced-h264ify-block_mp4a'] === undefined) {
-  localStorage['enhanced-h264ify-block_mp4a'] = false;
-}
-if (localStorage['enhanced-h264ify-disable_LN'] === undefined) {
-  localStorage['enhanced-h264ify-disable_LN'] = false;
-}
+// Trusted options from chrome.storage.local, shared across injection points.
+var trustedOptions = null;
 
-// Cache chrome.storage.local options in localStorage, then inject the codec
-// check script. Injection is deferred until the callback so that the injected
-// script always reads storage-verified values instead of stale defaults.
+// Read options from chrome.storage.local and pass them directly to injected
+// scripts via data attributes. This avoids reading from localStorage in the
+// page context, where any script on the origin could tamper with the values.
 chrome.storage.local.get({
-  // Set defaults
   block_60fps: false,
   block_h264: false,
   block_vp8: true,
@@ -67,17 +43,17 @@ chrome.storage.local.get({
   block_mp4a: false,
   disable_LN: false
  }, function(options) {
-   localStorage['enhanced-h264ify-block_60fps'] = options.block_60fps;
-   localStorage['enhanced-h264ify-block_h264'] = options.block_h264;
-   localStorage['enhanced-h264ify-block_vp8'] = options.block_vp8;
-   localStorage['enhanced-h264ify-block_vp9'] = options.block_vp9;
-   localStorage['enhanced-h264ify-block_av1'] = options.block_av1;
-   localStorage['enhanced-h264ify-block_opus'] = options.block_opus;
-   localStorage['enhanced-h264ify-block_mp4a'] = options.block_mp4a;
-   localStorage['enhanced-h264ify-disable_LN'] = options.disable_LN;
+   trustedOptions = options;
 
    const injectScript = document.createElement('script');
    injectScript.src = chrome.runtime.getURL("/src/inject/inject_codec_check.js");
+   injectScript.dataset.blockH264 = options.block_h264;
+   injectScript.dataset.blockVp8 = options.block_vp8;
+   injectScript.dataset.blockVp9 = options.block_vp9;
+   injectScript.dataset.blockAv1 = options.block_av1;
+   injectScript.dataset.blockOpus = options.block_opus;
+   injectScript.dataset.blockMp4a = options.block_mp4a;
+   injectScript.dataset.block60fps = options.block_60fps;
    injectScript.onload = function() {
      this.parentNode.removeChild(this);
    };
@@ -85,12 +61,11 @@ chrome.storage.local.get({
  }
 );
 
-
 document.onreadystatechange = function() {
   if (document.readyState == 'complete') {
     const script = document.createElement('script');
     script.src = chrome.runtime.getURL("/src/inject/inject_ln.js");
-    script.dataset.disableLn = localStorage['enhanced-h264ify-disable_LN'];
+    script.dataset.disableLn = trustedOptions ? trustedOptions.disable_LN : false;
     document.body.appendChild(script);
   }
 }

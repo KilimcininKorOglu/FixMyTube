@@ -24,29 +24,29 @@
  */
 
 function readSettings() {
-  var prefix = 'enhanced-h264ify-';
+  var data = document.currentScript.dataset;
   var disallowed = [];
-  if (localStorage[prefix + 'block_h264'] === 'true') {
+  if (data.blockH264 === 'true') {
     disallowed.push('avc');
   }
-  if (localStorage[prefix + 'block_vp8'] === 'true') {
+  if (data.blockVp8 === 'true') {
     disallowed.push('vp8');
   }
-  if (localStorage[prefix + 'block_vp9'] === 'true') {
+  if (data.blockVp9 === 'true') {
     disallowed.push('vp9', 'vp09');
   }
-  if (localStorage[prefix + 'block_av1'] === 'true') {
+  if (data.blockAv1 === 'true') {
     disallowed.push('av01', 'av99');
   }
-  if (localStorage[prefix + 'block_opus'] === 'true') {
+  if (data.blockOpus === 'true') {
     disallowed.push('opus');
   }
-  if (localStorage[prefix + 'block_mp4a'] === 'true') {
+  if (data.blockMp4a === 'true') {
     disallowed.push('mp4a');
   }
   return {
     disallowedTypes: disallowed,
-    block60fps: localStorage[prefix + 'block_60fps'] === 'true'
+    block60fps: data.block60fps === 'true'
   };
 }
 
