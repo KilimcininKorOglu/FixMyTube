@@ -16,10 +16,6 @@
     "message": "Blokovat h264 (AVC)"
   },
 
-  "optionsBlockVP8": {
-    "message": "Blokovat VP8"
-  },
-
   "optionsBlockVP9": {
     "message": "Blokovat VP9"
   },

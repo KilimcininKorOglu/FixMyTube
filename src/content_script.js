@@ -36,7 +36,6 @@ var trustedOptions = null;
 chrome.storage.local.get({
   block_60fps: false,
   block_h264: false,
-  block_vp8: true,
   block_vp9: true,
   block_av1: true,
   block_opus: false,
@@ -48,7 +47,6 @@ chrome.storage.local.get({
    const injectScript = document.createElement('script');
    injectScript.src = chrome.runtime.getURL("/src/inject/inject_codec_check.js");
    injectScript.dataset.blockH264 = options.block_h264;
-   injectScript.dataset.blockVp8 = options.block_vp8;
    injectScript.dataset.blockVp9 = options.block_vp9;
    injectScript.dataset.blockAv1 = options.block_av1;
    injectScript.dataset.blockOpus = options.block_opus;

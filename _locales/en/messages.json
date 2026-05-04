@@ -16,10 +16,6 @@
     "message": "Block h264 (AVC)"
   },
 
-  "optionsBlockVP8": {
-    "message": "Block VP8"
-  },
-
   "optionsBlockVP9": {
     "message": "Block VP9"
   },

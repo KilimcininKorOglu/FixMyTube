@@ -2,7 +2,6 @@
 function save_options() {
   var block_60fps = document.getElementById('block_60fps').checked;
   var block_h264 = document.getElementById('block_h264').checked;
-  var block_vp8 = document.getElementById('block_vp8').checked;
   var block_vp9 = document.getElementById('block_vp9').checked;
   var block_av1 = document.getElementById('block_av1').checked;
   var block_opus = document.getElementById('block_opus').checked;
@@ -12,7 +11,6 @@ function save_options() {
   chrome.storage.local.set({
     block_60fps: block_60fps,
     block_h264: block_h264,
-    block_vp8: block_vp8,
     block_vp9: block_vp9,
     block_av1: block_av1,
     block_opus: block_opus,
@@ -27,7 +25,6 @@ function restore_options() {
   chrome.storage.local.get({
     block_60fps: false,
     block_h264: false,
-    block_vp8: true,
     block_vp9: true,
     block_av1: true,
     block_opus: false,
@@ -36,7 +33,6 @@ function restore_options() {
   }, function(options) {
     document.getElementById('block_60fps').checked = options.block_60fps;
     document.getElementById('block_h264').checked = options.block_h264;
-    document.getElementById('block_vp8').checked = options.block_vp8;
     document.getElementById('block_vp9').checked = options.block_vp9;
     document.getElementById('block_av1').checked = options.block_av1;
     document.getElementById('block_opus').checked = options.block_opus;

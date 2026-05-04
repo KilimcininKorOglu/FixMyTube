@@ -29,9 +29,6 @@ function readSettings() {
   if (data.blockH264 === 'true') {
     disallowed.push('avc');
   }
-  if (data.blockVp8 === 'true') {
-    disallowed.push('vp8');
-  }
   if (data.blockVp9 === 'true') {
     disallowed.push('vp9', 'vp09');
   }
