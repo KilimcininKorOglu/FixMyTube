@@ -23,51 +23,61 @@
  * SOFTWARE.
  */
 
+function readSettings() {
+  var prefix = 'enhanced-h264ify-';
+  var disallowed = [];
+  if (localStorage[prefix + 'block_h264'] === 'true') {
+    disallowed.push('avc');
+  }
+  if (localStorage[prefix + 'block_vp8'] === 'true') {
+    disallowed.push('vp8');
+  }
+  if (localStorage[prefix + 'block_vp9'] === 'true') {
+    disallowed.push('vp9', 'vp09');
+  }
+  if (localStorage[prefix + 'block_av1'] === 'true') {
+    disallowed.push('av01', 'av99');
+  }
+  if (localStorage[prefix + 'block_opus'] === 'true') {
+    disallowed.push('opus');
+  }
+  if (localStorage[prefix + 'block_mp4a'] === 'true') {
+    disallowed.push('mp4a');
+  }
+  return {
+    disallowedTypes: disallowed,
+    block60fps: localStorage[prefix + 'block_60fps'] === 'true'
+  };
+}
+
 function override() {
+  var settings = readSettings();
+
   // Override video element canPlayType() function
   var videoElem = document.createElement('video');
   var origCanPlayType = videoElem.canPlayType.bind(videoElem);
-  videoElem.__proto__.canPlayType = makeModifiedTypeChecker(origCanPlayType);
+  videoElem.__proto__.canPlayType = makeModifiedTypeChecker(origCanPlayType, settings);
 
   // Override media source extension isTypeSupported() function
   var mse = window.MediaSource;
   // Check for MSE support before use
   if (mse === undefined) return;
   var origIsTypeSupported = mse.isTypeSupported.bind(mse);
-  mse.isTypeSupported = makeModifiedTypeChecker(origIsTypeSupported);
+  mse.isTypeSupported = makeModifiedTypeChecker(origIsTypeSupported, settings);
 }
 
 // return a custom MIME type checker that can defer to the original function
-function makeModifiedTypeChecker(origChecker) {
+function makeModifiedTypeChecker(origChecker, settings) {
   // Check if a video type is allowed
   return function (type) {
     if (type === undefined) return '';
-    var disallowed_types = [];
-    if (localStorage['enhanced-h264ify-block_h264'] === 'true') {
-      disallowed_types.push('avc');
-    }
-    if (localStorage['enhanced-h264ify-block_vp8'] === 'true') {
-      disallowed_types.push('vp8');
-    }
-    if (localStorage['enhanced-h264ify-block_vp9'] === 'true') {
-      disallowed_types.push('vp9', 'vp09');
-    }
-    if (localStorage['enhanced-h264ify-block_av1'] === 'true') {
-      disallowed_types.push('av01', 'av99');
-    }
-    if (localStorage['enhanced-h264ify-block_opus'] === 'true') {
-      disallowed_types.push('opus');
-    }
-    if (localStorage['enhanced-h264ify-block_mp4a'] === 'true') {
-      disallowed_types.push('mp4a');
-    }
 
     // If video type is in disallowed_types, say we don't support them
-    for (var i = 0; i < disallowed_types.length; i++) {
-      if (type.indexOf(disallowed_types[i]) !== -1) return '';
+    for (var i = 0; i < settings.disallowedTypes.length; i++) {
+      if (type.indexOf(settings.disallowedTypes[i]) !== -1) return '';
     }
 
-    if (localStorage['enhanced-h264ify-block_60fps'] === 'true') {
+    if (settings.block60fps) {
       var match = /framerate=(\d+)/.exec(type);
       if (match && match[1] > 30) return '';
     }
