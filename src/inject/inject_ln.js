@@ -44,12 +44,18 @@ function useActualVolumeLevel() {
     }
   }
 
-  const onVolumePanelAppear = (mutationList, thisObserver) => {
+  let currentVolumePanel = null;
+  let volumeObserver = null;
+
+  const onVolumePanelAppear = () => {
     const volumePanel = document.querySelector('.ytp-volume-panel');
-    if (volumePanel) {
-        const observer = new MutationObserver(onVolumeChange);
-        observer.observe(volumePanel, volumePanelConfig);
-        thisObserver.disconnect();
+    if (volumePanel && volumePanel !== currentVolumePanel) {
+        if (volumeObserver) {
+          volumeObserver.disconnect();
+        }
+        currentVolumePanel = volumePanel;
+        volumeObserver = new MutationObserver(onVolumeChange);
+        volumeObserver.observe(volumePanel, volumePanelConfig);
     }
   }
 
