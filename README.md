@@ -22,7 +22,7 @@ YouTube prefers AV1, then VP9, then H.264 when selecting a codec. AV1 and VP9 de
 Hardware decoding support by era:
 
 | Codec | Hardware decoding available since   |
-| ----- | ----------------------------------- |
+|-------|-------------------------------------|
 | H.264 | Virtually all devices               |
 | VP9   | GPUs from roughly 2016 onwards      |
 | AV1   | GPUs from roughly 2020-2021 onwards |
@@ -45,14 +45,14 @@ Changes take effect on page reload. You can verify the active codec by right-cli
 
 ## Options
 
-| Option                         | Default | Description                                  |
-| ------------------------------ | ------- | -------------------------------------------- |
-| Block h264 (AVC)               | Off     | Block H.264 video codec                      |
-| Block VP9                      | On      | Block VP9 video codec                        |
-| Block AV1                      | On      | Block AV1 video codec                        |
-| Block 60fps video              | Off     | Block videos with frame rate above 30fps     |
-| Block Opus                     | Off     | Block Opus audio codec                       |
-| Block AAC (MP4A)               | Off     | Block AAC audio codec                        |
+| Option                         | Default | Description                                   |
+|--------------------------------|---------|-----------------------------------------------|
+| Block h264 (AVC)               | Off     | Block H.264 video codec                       |
+| Block VP9                      | On      | Block VP9 video codec                         |
+| Block AV1                      | On      | Block AV1 video codec                         |
+| Block 60fps video              | Off     | Block videos with frame rate above 30fps      |
+| Block Opus                     | Off     | Block Opus audio codec                        |
+| Block AAC (MP4A)               | Off     | Block AAC audio codec                         |
 | Disable Loudness Normalization | Off     | Use actual volume level instead of normalized |
 
 ## How it works
