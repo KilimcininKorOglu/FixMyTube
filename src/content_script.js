@@ -44,10 +44,10 @@ if (localStorage['enhanced-h264ify-block_av1'] === undefined) {
   localStorage['enhanced-h264ify-block_av1'] = true;
 }
 if (localStorage['enhanced-h264ify-block_opus'] === undefined) {
-  localStorage['enhanced-h264ify-block_opus'] = true;
+  localStorage['enhanced-h264ify-block_opus'] = false;
 }
 if (localStorage['enhanced-h264ify-block_mp4a'] === undefined) {
-  localStorage['enhanced-h264ify-block_mp4a'] = true;
+  localStorage['enhanced-h264ify-block_mp4a'] = false;
 }
 if (localStorage['enhanced-h264ify-disable_LN'] === undefined) {
   localStorage['enhanced-h264ify-disable_LN'] = false;
